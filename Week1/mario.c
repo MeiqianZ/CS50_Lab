@@ -1,4 +1,6 @@
-#include <cs50.h>
+//#include "cs50.h"
+
+#include <stdlib.h>
 #include <stdio.h>
 
 void hashtag_matrix(int C){//C = number of columns

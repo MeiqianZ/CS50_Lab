@@ -77,8 +77,7 @@ int main(void){
         }else{
             printf("INVALID\n");
         }
-    }
-    else{
+    }else{
         printf("INVALID\n");
     }
 }
@@ -125,8 +124,7 @@ bool LuhnsAlg(int Numeral[], int len){
     endsum = endsum%10;
     if (endsum==0){
         return 1;
-    }
-    else{
+    }else{
         return 0;
     }
 }

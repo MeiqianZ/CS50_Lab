@@ -2,82 +2,74 @@
 #include <stdio.h>
 #include <math.h>
 
+void whichCard();
+void Print(char);
 int numberLength();
 bool LuhnsAlg();
 
 int main(void){
     
     long number = get_long("Number: ");
+    int length = numberLength(number);
+    whichCard(number, length);
+    
+}
+void whichCard(long number, int len){
     int numOfAmerican = 15;
     int numOfMasterOrVisa = 16;
     int numOfVisa = 13;
-    int length = numberLength(number);
-    
-    if (length==numOfAmerican){
+    if (len==numOfAmerican || len==numOfMasterOrVisa || len==numOfVisa){
         
         //long to string
-        char cache[numOfAmerican];
+        char cache[len];
         sprintf(cache,"%ld",number);
+        bool strToInt = false;
+        char Textbegin;
         
-        if (cache[0]=='3'&& (cache[1]=='4' || cache[1]=='7')){//All American Express numbers start with 34 or 37
-            
-            //string to int array
-            int numeral[numOfAmerican];
-            for (int i=0; i<numOfAmerican; i++){
-                numeral[i] = (int)cache[i]-48; //char 0..9 = int 48..57
-            }
-            if (LuhnsAlg(numeral, numOfAmerican)){
-                printf("AMEX\n");
-            }else{
-                printf("INVALID\n");
-            }
-        }else{
-            printf("INVALID\n");
-        }
-    }
-    else if (length==numOfMasterOrVisa){
-        
-        //long to string
-        char cache[numOfMasterOrVisa];
-        sprintf(cache,"%ld",number);
-        
-        //string to int array
-        int numeral[numOfMasterOrVisa];
-        for (int i=0; i<numOfMasterOrVisa; i++){
-            numeral[i] = (int)cache[i]-48; //char 0..9 = int 48..57
-        }
-        if (LuhnsAlg(numeral, numOfMasterOrVisa)){
+        //All American Express numbers start with 34 or 37
+        if (len==numOfAmerican && cache[0]=='3'&& (cache[1]=='4' || cache[1]=='7')){
+            strToInt = true;
+            Textbegin = 'A';
+        }else if (len==numOfMasterOrVisa){
+            strToInt = true;
             if (cache[0]=='4'){
-                printf("VISA\n");
+                Textbegin = 'V';
             }else{
-                printf("MASTERCARD\n");
-            }  
+                Textbegin = 'M';
+            }
+        }else if (len==numOfVisa && cache[0]=='4'){
+            strToInt = true;
+            Textbegin = 'V';
         }else{
-            printf("INVALID\n");
+            Print('I');
         }
-    }
-    else if (length==numOfVisa){
         
-        //long to string
-        char cache[numOfVisa];
-        sprintf(cache,"%ld",number);
- 
-        if (cache[0]=='4'){//All Visa numbers start with 4.
-            
-            //string to int array
-            int numeral[numOfVisa];
-            for (int i=0; i<numOfVisa; i++){
+        //string to int array and check Luhn's Algorithm
+        if (strToInt){
+            int numeral[len];
+            for (int i=0; i<len; i++){
                 numeral[i] = (int)cache[i]-48; //char 0..9 = int 48..57
             }
-            if (LuhnsAlg(numeral, numOfVisa)){
-                printf("VISA\n");
+            if (LuhnsAlg(numeral, len)){
+                Print(Textbegin);
             }else{
-                printf("INVALID\n");
+                Print('I');
             }
-        }else{
-            printf("INVALID\n");
         }
+        
     }else{
+            Print('I');
+    }
+}
+
+void Print(char textbegin){
+    if (textbegin=='A'){
+        printf("AMEX\n");
+    }else if (textbegin=='M'){
+        printf("MASTERCARD\n");
+    }else if (textbegin=='V'){
+        printf("VISA\n");
+    }else if (textbegin=='I'){
         printf("INVALID\n");
     }
 }
@@ -111,15 +103,17 @@ bool LuhnsAlg(int Numeral[], int len){
         //6->2*6->12->1+2+sum instead of 12+sum
         if (prod<10){
             sum = prod + sum;
-        }else {
+        }else{
             sum = prod%10 + 1 + sum;
         }
     }
+
     //2.
     for (int i = 1; i<=len; i+=2){
         endsum = Numeral[len-i] + endsum;
     }
     endsum = sum + endsum;
+
     //3. End of endsum is 0?
     endsum = endsum%10;
     if (endsum==0){

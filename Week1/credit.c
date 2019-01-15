@@ -11,18 +11,67 @@ int main(void){
     
     long number = get_long("Number: ");
     int length = numberLength(number);
-    whichCard(number, length);
     
+    char* cardNumberString = getStringFromNumber(number);
+
+    whichCard(cardNumberString, length);
 }
-void whichCard(long number, int len){
+
+char* getStringFromNumber(long creditCardNumber, int lengthOfCardNumber) {
+    
+    char cardNumber[lengthOfCardNumber + 1];
+    sprintf(cardNumber, "%ld\0", creditCardNumber);
+
+    return cardNumber;
+
+}
+
+bool isAmericanCreditCardNumber(char* creditCardNumber) {
+    return (creditCardNumber[0] == '3' && (creditCardNumber[1] == '4' || creditCardNumber[1] == '7'));
+}
+
+bool isMasterCardCreditCardNumber(char* creditCardNumber) {
+    return (creditCardNumber[0] == '3' && (creditCardNumber[1] == '4' || creditCardNumber[1] == '7'));
+}
+
+bool isVisaCreditCardNumber(char* creditCardNumber) {
+    return (creditCardNumber[0] == '3' && (creditCardNumber[1] == '4' || creditCardNumber[1] == '7'));
+}
+
+void whichCard(char* creditCardNumber, int length){
     int numOfAmerican = 15;
     int numOfMasterOrVisa = 16;
     int numOfVisa = 13;
+    
+    if (length == numOfVisa) {
+        if (isVisaCreditCardNumber(creditCardNumber)) {
+            strToInt = true;
+            Textbegin = 'A';
+        } else {
+            Print('I');
+        }
+        
+    } else if (ength == numOfAmerican) {
+        if (isAmericanCreditCardNumber(creditCardNumber)) {
+            strToInt = true;
+            Textbegin = 'A';
+        } else {
+            Print('I');
+        }
+
+    } else {
+       // treat visa and mastercard cards.
+        if (isVisaCreditCardNumber(creditCardNumber)) {
+            strToInt = true;
+            Textbegin = 'A';
+        } else {
+            Print('I');
+        }
+    }
+   
     if (len==numOfAmerican || len==numOfMasterOrVisa || len==numOfVisa){
         
-        //long to string
-        char cache[len];
-        sprintf(cache,"%ld",number);
+       
         bool strToInt = false;
         char Textbegin;
         

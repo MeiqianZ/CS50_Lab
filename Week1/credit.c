@@ -2,84 +2,105 @@
 #include <stdio.h>
 #include <math.h>
 
-void whichCard();
-void Print(char);
-int numberLength();
-bool LuhnsAlg();
+void whichCreditCard(long, int);
+void printWhichCard(char);
+int calculateLengthOfCreditCardNumber(long);
+bool LuhnsAlg(int digit[], int lengthOfCreditCardNumber);
+
 
 int main(void){
     
     long number = get_long("Number: ");
-    int length = numberLength(number);
-    whichCard(number, length);
+    int lengthOfCreditCardNumber = calculateLengthOfCreditCardNumber(number);
+    whichCreditCard(number, lengthOfCreditCardNumber);
     
 }
-void whichCard(long number, int len){
+
+void whichCreditCard(long number, int lengthOfCreditCardNumber){
+    
     int numOfAmerican = 15;
     int numOfMasterOrVisa = 16;
     int numOfVisa = 13;
-    if (len==numOfAmerican || len==numOfMasterOrVisa || len==numOfVisa){
+    
+    // for 1..12 digits is lengthOfCreditCardNumber=12 and for 0 or from 17 digits is lengthOfCreditCardNumber=0, so invalid
+    if ( lengthOfCreditCardNumber == 0  ||  lengthOfCreditCardNumber == 12 || lengthOfCreditCardNumber == 14 ){
         
-        //long to string
-        char cache[len];
-        sprintf(cache,"%ld",number);
-        bool strToInt = false;
-        char Textbegin;
+        printWhichCard('I');
+    } else {
+     
+        //long to char array to int array 
+        char numberInChar[lengthOfCreditCardNumber+1];
+        sprintf(numberInChar,"%ld"+0,number);
+        int digit[lengthOfCreditCardNumber];
+        for ( int num_position = 0 ; num_position < lengthOfCreditCardNumber && numberInChar[num_position] != 0 ; num_position++ ){
+            
+            digit[num_position] = (int)numberInChar[num_position]-48;//char 0..9 = int 48..57;
+        }
         
+        //Check Step 1: first Character
+        char firstCharacter = 0;
         //All American Express numbers start with 34 or 37
-        if (len==numOfAmerican && cache[0]=='3'&& (cache[1]=='4' || cache[1]=='7')){
-            strToInt = true;
-            Textbegin = 'A';
-        }else if (len==numOfMasterOrVisa){
-            strToInt = true;
-            if (cache[0]=='4'){
-                Textbegin = 'V';
-            }else{
-                Textbegin = 'M';
+        if ( lengthOfCreditCardNumber == numOfAmerican  &&  digit[0] == 3  &&  ( digit[1] == 4  ||  digit[1] == 7 ) ){ 
+            
+            firstCharacter = 'A';
+        } else if ( lengthOfCreditCardNumber == numOfMasterOrVisa ){
+            
+            //All Visa numbers start with 4
+            if ( digit[0] == 4 ){
+                
+                firstCharacter = 'V';
+            } else {
+                
+                firstCharacter = 'M';
             }
-        }else if (len==numOfVisa && cache[0]=='4'){
-            strToInt = true;
-            Textbegin = 'V';
-        }else{
-            Print('I');
+        } else if ( lengthOfCreditCardNumber == numOfVisa  &&  digit[0] == 4 ){ //All Visa numbers start with 4
+            
+            firstCharacter = 'V';
+        } else {
+            
+            printWhichCard('I');
         }
         
-        //string to int array and check Luhn's Algorithm
-        if (strToInt){
-            int numeral[len];
-            for (int i=0; i<len; i++){
-                numeral[i] = (int)cache[i]-48; //char 0..9 = int 48..57
+        //check Luhn's Algorithm
+        if ( firstCharacter != 0 ){
+             if ( LuhnsAlg(digit, lengthOfCreditCardNumber) ){
+                 
+                printWhichCard(firstCharacter);
+             } else {
+                 
+                printWhichCard('I');
             }
-            if (LuhnsAlg(numeral, len)){
-                Print(Textbegin);
-            }else{
-                Print('I');
-            }
-        }
-        
-    }else{
-            Print('I');
-    }
+        }     
+    }   
 }
 
-void Print(char textbegin){
-    if (textbegin=='A'){
+void printWhichCard(char firstCharacter){
+    
+    if ( firstCharacter == 'A' ){
         printf("AMEX\n");
-    }else if (textbegin=='M'){
+    } else if ( firstCharacter == 'M' ){
         printf("MASTERCARD\n");
-    }else if (textbegin=='V'){
+    } else if (firstCharacter == 'V' ){
         printf("VISA\n");
-    }else if (textbegin=='I'){
+    } else if ( firstCharacter == 'I' ){
         printf("INVALID\n");
     }
 }
 
-int numberLength(long num){
-    double x;
+int calculateLengthOfCreditCardNumber(long number){
+    
+    long digitToCompare;
     int length = 0;
-    for (int i=12; i<=16; i++){
-        x  = pow(10, i);
-        if (num < x){
+    int startDigit = 12;
+    int endDigit = 16;
+    for ( int i = startDigit ; i <= endDigit ; i++ ){
+        
+        digitToCompare  = pow(10, i);
+        //9999 9999 9999 9999 < 1 0000 0000 0000 0000 = 10^16 number is 16 digits 
+        //or 9 < 1 0000 0000 0000 = 10^12 number is less than 12 digits
+        //length = 0 from 17 digits
+        if ( number < digitToCompare ){
+            
             length = i;
             break;
         }
@@ -87,7 +108,8 @@ int numberLength(long num){
     return length;
 }
 
-bool LuhnsAlg(int Numeral[], int len){
+bool LuhnsAlg(int digit[], int lengthOfCreditCardNumber){
+    
     int sum = 0;
     int endsum = 0;
     int prod;
@@ -97,28 +119,38 @@ bool LuhnsAlg(int Numeral[], int len){
     //   | |                    |  |
     //   | len-i_max1-1=13-12   |  len-i_min2=13-1 
     //   len-i_max2=13-13       len-i_min1-1=13-2
-    //1.
-    for (int i = 2; i<=len; i+=2){
-        prod = 2 * Numeral[len-i];//starting with the number’s second-to-last digit
+    //
+    //step 1
+    for ( int i = 2 ; i <= lengthOfCreditCardNumber ; i += 2 ){
+        
+        //starting with the number’s second-to-last digit
+        prod = 2 * digit[lengthOfCreditCardNumber-i];
         //6->2*6->12->1+2+sum instead of 12+sum
-        if (prod<10){
-            sum = prod + sum;
-        }else{
-            sum = prod%10 + 1 + sum;
+        if ( prod < 10 ){
+            
+            //sum single digit result of prod 
+            sum += prod;
+        } else {
+            
+            //sum two digit of prod separated. max of prod is 2*9=18, so is 18%10 + 1
+            sum += prod%10 + 1;
         }
     }
 
-    //2.
-    for (int i = 1; i<=len; i+=2){
-        endsum = Numeral[len-i] + endsum;
+    //step 2
+    for ( int i = 1 ; i <= lengthOfCreditCardNumber ; i += 2 ){
+        
+        endsum += digit[lengthOfCreditCardNumber-i];
     }
-    endsum = sum + endsum;
+    endsum += sum;
 
-    //3. End of endsum is 0?
-    endsum = endsum%10;
-    if (endsum==0){
+    //step 3: End of endsum is 0?
+    endsum %= 10;
+    if ( endsum == 0 ){
+        
         return 1;
-    }else{
+    } else {
+        
         return 0;
     }
 }

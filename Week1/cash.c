@@ -1,25 +1,31 @@
 #include <cs50.h>
 #include <stdio.h>
 
-void cashback();
+void cashback(int);
 
 int main(void){
+
     float owe = get_float("Change owed: ");
-    int penny = (int)(owe*100);
-    if (penny>0){
-        cashback(penny);
+    int returnPenny = (int)(owe*100);
+    if (returnPenny>0){
+
+        cashback(returnPenny);
     }else{
-        printf("foo\n");
+
+        printf("foo\n");//requires
     }
 }
 
-void cashback(int p){
-    int numberOfCointyp = 4;
-    int cointyp[4] = {25, 10, 5, 1};
-    int numberOfCoints = 0;
-    for (int i=0; i<numberOfCointyp && p>0; i++){
-        numberOfCoints = numberOfCoints + p / cointyp[i];
-        p = p%cointyp[i];
+void cashback(int returnPenny){
+
+    int numberOfCoinTyp = 4;
+    int coinTyp[numberOfCoinTyp] = {25, 10, 5, 1};
+    int amountOfReturnCoints = 0;
+    for (int i=0; i<numberOfCoinTyp && returnPenny>0; i++){
+
+        amountOfReturnCoints +=  returnPenny / coinTyp[i];
+        returnPenny %= cointyp[i];
     }
-    printf("%i\n", numberOfCoints);
+
+    printf("%i\n", amountOfReturnCoints);
 }

@@ -17,13 +17,17 @@ int main(void){
 void cashback(int returnPenny){
 
     int numberOfCoinTyp = 4;
-    int coinTyp[4] = {25, 10, 5, 1};
-    int amountOfReturnCoints = 0;
-    for ( int i=0; i<numberOfCoinTyp && returnPenny>0; i++ ){
+    int quarters = 25;
+    int dimes = 10;
+    int nickels = 5;
+    int pennies = 1;
+    int coinTyp[] = { quarters, dimes, nickels, pennies };
+    int amountOfReturnCoins = 0;
+    for ( int coinTypeIndex = 0 ; coinTypeIndex < numberOfCoinTyp && returnPenny > 0 ; coinTypeIndex++ ){
 
-        amountOfReturnCoints +=  returnPenny / coinTyp[i];
-        returnPenny %= coinTyp[i];
+        amountOfReturnCoins +=  returnPenny / coinTyp[coinTypeIndex];
+        returnPenny %= coinTyp[coinTypeIndex];
     }
 
-    printf("%i\n", amountOfReturnCoints);
+    printf("%i\n", amountOfReturnCoins);
 }

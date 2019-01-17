@@ -6,11 +6,12 @@ void cashback(int);
 int main(void){
     
     float oweChange;
+    float scaling_factor = 100.0;
     do {
         oweChange = get_float("Change owed: ");
     } while ( oweChange <= 0 );
     
-    int returnPenny = (int) (oweChange * 100);
+    int returnPenny = (int) (oweChange * scaling_factor);
     cashback(returnPenny);
 }
 
@@ -31,3 +32,4 @@ void cashback(int returnPenny){
 
     printf("%i\n", amountOfReturnCoins);
 }
+ 

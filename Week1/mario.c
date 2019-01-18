@@ -33,3 +33,4 @@ int main(void){
         printf("Mario: Enter a number greater than 0!\n");
     }
 }
+ 

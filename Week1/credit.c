@@ -154,3 +154,4 @@ bool LuhnsAlg(int digit[], int lengthOfCreditCardNumber){
         return 0;
     }
 }
+ 

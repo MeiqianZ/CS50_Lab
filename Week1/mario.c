@@ -1,29 +1,35 @@
 #include <cs50.h>
 #include <stdio.h>
 
-void hashtag_matrix(int Col){//Col = number of columns
+void hashtag_matrix(int matrixSize){
     
-    char Hashtags[Col][Col];
-    for(int i=0; i<Col; i++){
-        
-        for(int j=0; j<Col; j++){
-            if( (i+j)>=Col-1 ){
-                Hashtags[i][j]='#';
-            }else{
-                Hashtags[i][j]=' ';
+    char Hashtags[matrixSize+1];
+    for ( int row = 0 ; row < matrixSize ; row++ ){
+
+        int column;
+        for ( column = 0 ; column < matrixSize ; column++ ){
+
+            if ( (row+column) >= matrixSize-1 ){
+
+                Hashtags[column] = '#';
+            } else {
+                
+                Hashtags[column] = ' ';
             }
         }
-       
-        printf("%s\n", Hashtags[i]);
+        Hashtags[column] = '\0';
+        printf("%s\n", Hashtags);
     }
 }
 
 int main(void){
     
     int height = get_int("Height: ");
-    if(height>0){
+    if ( height > 0 ){
+
         hashtag_matrix(height);   
-    }else{
+    } else {
+
         printf("Mario: Enter a number greater than 0!\n");
     }
 }

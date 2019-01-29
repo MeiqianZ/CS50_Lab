@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2 )
+    if (argc != 2)
     {
         printf("Usage: ./recover image\n");
         return 1;
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     char *infile = argv[1];
     //printf("%s\n",infile);
 
-    FILE* input = fopen(infile, "r");
+    FILE *input = fopen(infile, "r");
     if (input == NULL)
     {
         printf("Could not open card.raw.\n");
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     // filename counter
     int filecount = 0;
 
-    FILE* picture = NULL;
+    FILE *picture = NULL;
 
     // check if we've found a jpeg yet or not
     int jpg_found = 0; //false

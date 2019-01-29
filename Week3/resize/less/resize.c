@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc != 4 )
+    if (argc != 4)
     {
         printf("Usage: ./resize 0<n<=100 input.bmp output.bmp\n");
         return 1;
